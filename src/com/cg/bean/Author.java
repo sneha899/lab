@@ -7,32 +7,36 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
+
 @Entity
 @Table(name="Author_tbl")
-public class Author {
 
+//Making a Table with name Author
+
+public class Author {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="authorId")
-	private int authorId;
+	@Column(name="AUTHORID")
+	private Integer authorId;
 	
-	@Column(name="firstName",length=15)
+	@Column(name="FIRSTNAME")
 	private String firstName;
 	
-	@Column(name="middleName",length=15)
+	@Column(name="MIDDLENAME")
 	private String middleName;
 	
-	@Column(name="lastName",length=15)
+	@Column(name="LASTNAME")
 	private String lastName;
 	
-	@Column(name="phoneNo")
-	private int phoneNo;
+	@Column(name="PHONENO")
+	private String phoneNo;
 	
 	public Author() {
 
 	}
 
-	public Author(int authorId, String firstName, String middleName, String lastName, int phoneNo) {
+	public Author(Integer authorId, String firstName, String middleName, String lastName, String phoneNo) {
 		super();
 		this.authorId = authorId;
 		this.firstName = firstName;
@@ -47,11 +51,11 @@ public class Author {
 				+ ", lastName=" + lastName + ", phoneNo=" + phoneNo + "]";
 	}
 
-	public int getAuthorId() {
+	public Integer getAuthorId() {
 		return authorId;
 	}
 
-	public void setAuthorId(int authorId) {
+	public void setAuthorId(Integer authorId) {
 		this.authorId = authorId;
 	}
 
@@ -79,11 +83,11 @@ public class Author {
 		this.lastName = lastName;
 	}
 
-	public int getPhoneNo() {
+	public String getPhoneNo() {
 		return phoneNo;
 	}
 
-	public void setPhoneNo(int phoneNo) {
+	public void setPhoneNo(String phoneNo) {
 		this.phoneNo = phoneNo;
 	}
 	

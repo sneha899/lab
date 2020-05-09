@@ -1,137 +1,120 @@
 package com.cg.pl;
-
+import java.io.BufferedReader; 
+import java.io.InputStreamReader;
 import java.util.Scanner;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
 import com.cg.bean.Author;
+import com.cg.service.AuthorServiceImpl;
 
 public class Client {
-
 	public static void main(String[] args) {
-		Scanner scanner =new Scanner(System.in);
-		EntityManagerFactory emf=Persistence.createEntityManagerFactory("JPA-PU");
-		EntityManager em= emf.createEntityManager();
-		Author ar=null;
-		int choice=0;
-		 while(choice!=6) {
-			 em.getTransaction().begin();
-			 System.out.println("1.add author");
-			 System.out.println("2.find Author");
-			 System.out.println("3.update Author");
-			 System.out.println("4.delete");
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	
+        
+		AuthorServiceImpl service = new AuthorServiceImpl();
+		try {
+			while(true) {
 			
-			 System.out.println("5.exit");
-			 System.out.println("enter your choice");
-			 choice =scanner.nextInt();
-			 
-			 switch(choice) {
-			 
-			 
-			 case 1:
-					Author author=new Author();
-
-				    System.out.println("enter first name");
-	                 String firstName= scanner.next();
-	                 System.out.println("enter middle name");
-	    	         String middleName= scanner.next();
-	    	         System.out.println("enter last name");
-	    	         String lastName= scanner.next();
-	    	         
-	    	         System.out.println("enter phoneno");
-	    	         int phoneno=scanner.nextInt();
-	    	         
-	    	         author.setFirstName(firstName);
-	    	         author.setMiddleName(middleName);
-	    	         author.setLastName(lastName);
-                     
-                     author.setPhoneNo(phoneno);
-                     em.persist(author);
-                     break;
-                     
-			 case 2: System.out.println("enter your id");
-			         int authorId=scanner.nextInt();
-                     ar=em.find(Author.class,authorId);
-
-			         if(ar==null) 
-			         {
-			        	 System.out.println("author id not found");
-			         }
-			         else
-			         {
-			        	 System.out.println("author found");
-			        	 author=em.find(Author.class,authorId);
-			        	 System.out.println("id is"+ar.getAuthorId());
-			        	 System.out.println("first name:"+ar.getFirstName());
-			        	 System.out.println("middle name :"+ar.getMiddleName());
-			        	 System.out.println("last name:"+ar.getLastName());
-			        	 System.out.println("phone number:"+ar.getPhoneNo());
-			         }
-			         break;
-			 case 3: System.out.println("enter ur id");
-			          authorId=scanner.nextInt();
-			         ar=em.find(Author.class,authorId);
-			         if(ar==null)
-			         {
-			        	 System.out.println("author id not found");
-			         }
-			         else
-			         {    
-			        	 
-			        	 System.out.println("enter first name");
-		                 String fName= scanner.next();
-		                 System.out.println("enter middle name");
-		    	         String mName= scanner.next();
-		    	         System.out.println("enter last name");
-		    	         String lName= scanner.next();
-		    	        
-
-		    	         System.out.println("enter phoneno");
-		    	         int pno=scanner.nextInt();
-		    	         
-		    	         ar.setFirstName(fName);
-		    	         ar.setMiddleName(mName);
-		    	         ar.setLastName(lName);
-	                     
-	                     ar.setPhoneNo(pno);
-	                     em.persist(ar);
-
-//			        	 em.merge(author);
-//			        	 System.out.println(author.getFirstName());
-//			        	 System.out.println(author.getMiddleName());
-//			        	 System.out.println(author.getLastName());
-//						 System.out.println("id found");
-			         }
-			         break;
-			         
-			 case 4: System.out.println("enter id"); 
-                      authorId=scanner.nextInt();
-                      ar=em.find(Author.class, authorId);
-                      if(ar==null)
-                      {
-                    	  System.out.println("author id not found");
-                      }
-                      else
-                      {
-                    	  em.remove(ar);
-                    	  System.out.println("removed");
-                      }
-                      break;
-                      
-                      
-			 
-			 
-			 case 5: System.out.println("exited sucessfully");  
-			         return;
-			         
-			 }
-			 em.getTransaction().commit();
-		 }
-		 em.close();
-		 emf.close();
-
+				System.err.println("*MENU*");
+				System.out.println("1. Add New Author");
+				System.out.println("2. Update Author");
+				System.out.println("3. Delete Author");
+				System.out.println("4. view author");
+				System.out.println("5. Exit");
+				
+				System.out.println("Enter your choice");
+				String choice = null;
+				choice = br.readLine();
+				
+				switch(choice) {
+					case "1": //(author Addition)
+					
+						Author author = new Author();
+						System.out.println("Enter firstname");
+						author.setFirstName(br.readLine());
+						
+						System.out.println("Enter middlename");
+						author.setMiddleName(br.readLine());
+						System.out.println("Enter lastname");
+						author.setLastName(br.readLine());
+						System.out.println("Enter phone number");
+						author.setPhoneNo(br.readLine());
+						try
+						 {
+						 
+						 int id= service.addAuthor(author);
+						 {
+						 System.out.println("Author id="+id);
+						 System.out.println("author added succesfully");
+						 }
+						 }
+						 catch(Exception e)
+						 {
+						 System.err.println(e.getMessage());
+						 }
+						break;
+					case "2": //(author updation)
+					
+						System.out.println("Enter author id");
+						Integer id = Integer.parseInt(br.readLine());
+						author = service.findAuthor(id);
+						if(author != null) {
+							System.out.println("Author eixst");
+							System.out.println(author.toString());
+							Author temp = new Author();
+							temp.setAuthorId(author.getAuthorId());
+							System.out.println("Enter firstname");
+							temp.setFirstName(br.readLine());
+							System.out.println("Enter middlename");
+							temp.setMiddleName(br.readLine());
+							System.out.println("Enter lastname");
+							temp.setLastName(br.readLine());
+							System.out.println("Enter phone number");
+							temp.setPhoneNo(br.readLine());
+							if(service.updateAuthor(temp)!=null) {
+								System.out.println("Author updated sucsessfully");
+							}else {
+								System.out.println("Not updated");
+							}
+						}else {
+							System.out.println("Author does not exist");
+						}
+						break;
+					case "3": //(author deletion)
+					
+						System.out.println("Enter author id");
+						id = Integer.parseInt(br.readLine());
+						if(service.deleteAuthor(id)) {
+							System.out.println("Author deleted succesfully");
+						}else {
+							System.out.println("Author not deleted");
+						}
+						break;
+					case "4": //view author
+						System.out.println("Enter Author id");
+						id = Integer.parseInt(br.readLine());
+						try
+						{
+						author=service.findAuthor(id);
+						if(author!=null) {
+						System.out.println("first name="+author.getFirstName()+ ", middle name="+author.getMiddleName()+
+								" ,last name="+author.getLastName()+",phone number="+author.getPhoneNo());
+						}else {
+							System.out.println("null");
+						}
+						}
+						catch(Exception e)
+						{
+						System.err.println(e.getMessage());
+						}
+						break;
+						
+					default:
+						System.exit(0);
+				}
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
-
 }

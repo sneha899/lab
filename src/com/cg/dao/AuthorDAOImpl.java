@@ -1,5 +1,7 @@
 package com.cg.dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -13,17 +15,18 @@ public class AuthorDAOImpl implements AuthorDAO{
 	
 	//method for adding an author
 	@Override
-	public boolean addAuthor(Author author) {
+	public int addAuthor(Author author) {
 		try {
 			manager.getTransaction().begin();
 			manager.persist(author);
 			manager.getTransaction().commit();
-			return true;
+			
 		}catch(Exception e) {
-			e.printStackTrace();
-			return false;
+			e.printStackTrace();		
 		}
+		return author.getAuthorId();
 	}
+
      //method for deleting an author
 	@Override
 	public boolean deleteAuthor(Author author) {
@@ -58,6 +61,10 @@ public class AuthorDAOImpl implements AuthorDAO{
 	@Override
 	public Author findAuthor(Integer id) {
 		return manager.find(Author.class, id);
+	}
+	@Override
+	public List<Author> viewAuthor(){
+		return (List<Author>) manager.getReference(Author.class, 1);
 	}
 
 }
